@@ -51,9 +51,15 @@ fn list_files() -> (iron::status::Status, String) {
 
 fn login_handler(req: &mut Request) -> IronResult<Response> {
   match req.get_ref::<UrlEncodedBody>() {
-         Ok(ref hashmap) => println!("Parsed POST request query string:\n {:?}", hashmap),
-         Err(ref e) => println!("{:?}", e)
-     };
+    Ok(ref hashmap) => {
+      if hashmap.contains_key("login") && hashmap.contains_key("password") {
+        let ref login = hashmap["login"][0];
+        let ref password = hashmap["password"][0];
+        println!("{:?} {:?}", login, password);
+      }
+    },
+    Err(ref e) => println!("{:?}", e)
+  };
   Ok(Response::with((status::Ok, String::from("coucou"))))
 }
 

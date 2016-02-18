@@ -12,6 +12,5 @@ extern crate frank_jwt;
 
 
 pub mod daemon;
-pub mod runner;
 pub mod api;
 pub mod data_format;

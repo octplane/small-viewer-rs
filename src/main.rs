@@ -12,7 +12,6 @@ extern crate urlencoded;
 extern crate frank_jwt;
 
 mod data_format;
-mod runner;
 mod daemon;
 mod api;
 
@@ -34,34 +33,20 @@ fn main() {
   let program = args[0].clone();
 
   let mut opts = Options::new();
-  opts.optflag("s", "server", "start web server");
-  opts.optflag("d", "daemonize", "Daemonize the webserver, implies -s");
+  opts.optopt("c", "config", "Configuration file path. Default to config.ini", "CONFIG");
   opts.optflag("h", "help", "print this help menu");
 
   let matches = match opts.parse(&args[1..]) {
-    Ok(m) => { m }
+    Ok(m) => m,
     Err(f) => { panic!(f.to_string()) }
   };
+
+  let configuration_file = matches.opt_str("c").unwrap_or(String::from("config.ini"));
+
   if matches.opt_present("h") {
     print_usage(&program, opts);
     return;
   }
-  if matches.opt_present("d") || matches.opt_present("s") {
-    daemon::startup();
-  } else {
-    if matches.free.len() > 0 {
-      let r = runner::Runner;
-
-      let mut cmd = matches.free.clone();
-      let params = cmd.split_off(1);
-
-      let _dummy = r.run(cmd[0].as_str(), params, None);
-    } else {
-      print_usage(&program, opts);
-      return;
-    }
-  };
-
-
+  daemon::startup();
 
 }

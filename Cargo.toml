@@ -1,10 +1,10 @@
 [package]
 
-name = "small-logger"
-description = "a small logger for programs who do not know how to log correctly"
-version = "0.1.0"
+name = "small-viewer"
+description = "a small-logger logs viewer"
+version = "0.0.1"
 license-file = "LICENSE"
-repository = "https://github.com/octplane/small-logger"
+repository = "https://github.com/octplane/small-viewer-rs"
 authors = ["Pierre Baillet <pierre@baillet.name>"]
 
 [dependencies]
@@ -18,3 +18,5 @@ mount = "0.0.10"
 
 frank_jwt = "*"
 urlencoded = "*"
+nom = "*"
+
