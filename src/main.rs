@@ -7,6 +7,8 @@ extern crate mount;
 extern crate router;
 extern crate getopts;
 extern crate urlencoded;
+#[macro_use]
+extern crate nom;
 
 
 extern crate frank_jwt;
@@ -14,12 +16,15 @@ extern crate frank_jwt;
 mod data_format;
 mod daemon;
 mod api;
+mod config_reader;
 
 use std::env;
 use getopts::Options;
+use std::io::prelude::*;
+use std::fs::File;
+
 
 extern crate time;
-
 
 fn print_usage(program: &str, opts: Options) {
     let brief = format!("Usage: {} [-d] [-s] [COMMAND WITH PARAMETERS]", program);
@@ -42,6 +47,17 @@ fn main() {
   };
 
   let configuration_file = matches.opt_str("c").unwrap_or(String::from("config.ini"));
+ 
+  
+  let mut configuration_string = String::new();
+  match File::open(configuration_file) {
+    Ok(mut f) => f.read_to_string(&mut configuration_string).unwrap(),
+    Err(f) => { panic!(f.to_string()) }
+  };
+
+  let configuration = config_reader::categories(configuration_string.as_bytes());
+  println!("Configuration: {:?}", configuration);
+  return;
 
   if matches.opt_present("h") {
     print_usage(&program, opts);
