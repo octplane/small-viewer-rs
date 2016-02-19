@@ -38,7 +38,7 @@ fn main() {
   let program = args[0].clone();
 
   let mut opts = Options::new();
-  opts.optopt("c", "config", "Configuration file path. Default to config.ini", "CONFIG");
+  opts.optopt("c", "config", "Configuration file path. Default to config.conf", "CONFIG");
   opts.optflag("h", "help", "print this help menu");
 
   let matches = match opts.parse(&args[1..]) {
@@ -46,7 +46,7 @@ fn main() {
     Err(f) => { panic!(f.to_string()) }
   };
 
-  let configuration_file = matches.opt_str("c").unwrap_or(String::from("config.ini"));
+  let configuration_file = matches.opt_str("c").unwrap_or(String::from("config.conf"));
  
   
   let mut configuration_string = String::new();
