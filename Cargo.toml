@@ -8,13 +8,13 @@ repository = "https://github.com/octplane/small-viewer-rs"
 authors = ["Pierre Baillet <pierre@baillet.name>"]
 
 [dependencies]
-rustc-serialize = "0.3.17"
-time = "0.1.34"
-iron = "0.2.6"
-router = "0.1.0"
-staticfile = "0.1.0."
-getopts = "0.2"
-mount = "0.0.10"
+rustc-serialize = "*"
+time = "*"
+iron = "*"
+router = "*"
+staticfile = "0.2.0"
+getopts = "*"
+mount = "*"
 
 frank_jwt = "*"
 urlencoded = "*"
