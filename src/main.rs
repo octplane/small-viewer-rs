@@ -12,7 +12,6 @@ extern crate iron_login;
 #[macro_use]
 extern crate nom;
 
-
 extern crate frank_jwt;
 
 mod data_format;

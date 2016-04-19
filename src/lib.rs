@@ -7,8 +7,14 @@ extern crate mount;
 extern crate router;
 extern crate getopts;
 extern crate urlencoded;
-
+extern crate iron_login;
 extern crate frank_jwt;
+
+
+#[macro_use]
+extern crate nom;
+
+
 
 
 pub mod daemon;

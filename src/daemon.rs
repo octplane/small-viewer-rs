@@ -8,7 +8,7 @@ use staticfile::Static;
 
 use iron::prelude::*;
 use iron::status;
-use self::iron_login::User;
+use iron_login::User;
 
 use urlencoded::UrlEncodedBody;
 
@@ -143,7 +143,7 @@ pub fn startup() {
   mount.mount("/viewer", Static::new(Path::new("viewer")));
 
   let mut chain = Chain::new(mount);
-  chain.around(self::iron_login::LoginManager::new(cookie_signing_key));
+  chain.around(iron_login::LoginManager::new(cookie_signing_key));
 
   println!("Open http://localhost:5001/viewer/");
   Iron::new(chain).http("0.0.0.0:5001").unwrap();
