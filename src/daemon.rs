@@ -1,3 +1,6 @@
+extern crate iron_login;
+
+
 use std::path::Path;
 use std::error::Error;
 
@@ -5,6 +8,8 @@ use staticfile::Static;
 
 use iron::prelude::*;
 use iron::status;
+use self::iron_login::User;
+
 use urlencoded::UrlEncodedBody;
 
 use iron;
@@ -49,19 +54,62 @@ fn list_files() -> (iron::status::Status, String) {
 }
 
 
-fn login_handler(req: &mut Request) -> IronResult<Response> {
-  match req.get_ref::<UrlEncodedBody>() {
-    Ok(ref hashmap) => {
-      if hashmap.contains_key("login") && hashmap.contains_key("password") {
-        let ref login = hashmap["login"][0];
-        let ref password = hashmap["password"][0];
-        println!("{:?} {:?}", login, password);
-      }
-    },
-    Err(ref e) => println!("{:?}", e)
-  };
-  Ok(Response::with((status::Ok, String::from("coucou"))))
+#[derive(Debug)]
+/// Representation of an authenticated user
+struct MyUser(String);
+impl MyUser {
+    fn new(user_id: &str) -> MyUser {
+        MyUser(user_id.to_owned())
+    }
 }
+impl User for MyUser {
+    fn from_user_id(_: &mut Request, user_id: &str) -> Option<MyUser> {
+        Some(MyUser(user_id.to_owned()))
+    }
+    fn get_user_id(&self) -> String {
+        self.0.to_owned()
+    }
+}
+
+/// A basic iron request handler
+fn login_handler(req: &mut Request) -> IronResult<Response> {
+    let login = MyUser::get_login(req);
+    // If a query (`?username`) is passed, set the username to that string
+    if let Some(ref uid) = req.url.query {
+        // If no username is passed, log out
+        if uid == "" {
+            Ok(Response::new()
+                   .set(::iron::status::Ok)
+                   .set(format!("Logged out"))
+                   .set(login.log_out()))
+        } else {
+            Ok(Response::new()
+                   .set(::iron::status::Ok)
+                   .set(format!("User set to '{}'", uid))
+                   .set(login.log_in(MyUser::new(uid))))
+        }
+    } else {
+        let user = login.get_user();
+        Ok(Response::new()
+               .set(::iron::status::Ok)
+               .set(format!("user = {:?}", user)))
+    }
+}
+
+
+// fn login_handler(req: &mut Request) -> IronResult<Response> {
+//   match req.get_ref::<UrlEncodedBody>() {
+//     Ok(ref hashmap) => {
+//       if hashmap.contains_key("login") && hashmap.contains_key("password") {
+//         let ref login = hashmap["login"][0];
+//         let ref password = hashmap["password"][0];
+//         println!("{:?} {:?}", login, password);
+//       }
+//     },
+//     Err(ref e) => println!("{:?}", e)
+//   };
+//   Ok(Response::with((status::Ok, String::from("coucou"))))
+// }
 
 fn get_handler(req: &mut Request) -> IronResult<Response> {
   let query = req.extensions.get::<Router>().unwrap().find("method").unwrap_or("/");
@@ -76,12 +124,13 @@ fn get_handler(req: &mut Request) -> IronResult<Response> {
 pub fn startup() {
   println!("Starting HTTP Daemon...");
 
+  // FIXME compute this at startup
+  let cookie_signing_key = b"LoginSecretKey"[..].to_owned();
+
   match api::find_files("./logs") {
     Ok(logs) => println!("Files: {:?}", logs),
     Err(e) => println!("Error: {:?}", e)
   }
-
-  // FileMeta::fast_meta("./logs/2015/03/24/ls-17:30:30.ajson".to_string());
 
   let mut mount = Mount::new();
 
@@ -89,10 +138,13 @@ pub fn startup() {
   let mut router = Router::new();
   router.get("/:method", get_handler);
   router.post("/login", login_handler);
-  mount.mount("/api/1/", router);
 
+  mount.mount("/api/1/", router);
   mount.mount("/viewer", Static::new(Path::new("viewer")));
 
+  let mut chain = Chain::new(mount);
+  chain.around(self::iron_login::LoginManager::new(cookie_signing_key));
+
   println!("Open http://localhost:5001/viewer/");
-  Iron::new(mount).http("0.0.0.0:5001").unwrap();
+  Iron::new(chain).http("0.0.0.0:5001").unwrap();
 }

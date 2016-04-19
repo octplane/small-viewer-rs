@@ -2,7 +2,7 @@
 
 name = "small-viewer"
 description = "a small-logger logs viewer"
-version = "0.0.1"
+version = "0.0.2"
 license-file = "LICENSE"
 repository = "https://github.com/octplane/small-viewer-rs"
 authors = ["Pierre Baillet <pierre@baillet.name>"]
@@ -10,12 +10,14 @@ authors = ["Pierre Baillet <pierre@baillet.name>"]
 [dependencies]
 rustc-serialize = "*"
 time = "*"
+
 iron = "*"
 router = "*"
 staticfile = "0.2.0"
-getopts = "*"
+iron-login = "*"
 mount = "*"
 
+getopts = "*"
 frank_jwt = "*"
 urlencoded = "*"
 nom = "*"

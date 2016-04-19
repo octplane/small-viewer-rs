@@ -7,6 +7,8 @@ extern crate mount;
 extern crate router;
 extern crate getopts;
 extern crate urlencoded;
+extern crate iron_login;
+
 #[macro_use]
 extern crate nom;
 
