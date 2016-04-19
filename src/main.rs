@@ -47,8 +47,7 @@ fn main() {
   };
 
   let configuration_file = matches.opt_str("c").unwrap_or(String::from("config.conf"));
- 
-  
+
   let mut configuration_string = String::new();
   match File::open(configuration_file) {
     Ok(mut f) => f.read_to_string(&mut configuration_string).unwrap(),
@@ -57,7 +56,6 @@ fn main() {
 
   let configuration = config_reader::categories(configuration_string.as_bytes());
   println!("Configuration: {:?}", configuration);
-  return;
 
   if matches.opt_present("h") {
     print_usage(&program, opts);
