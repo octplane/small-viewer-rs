@@ -13,12 +13,14 @@ time = "*"
 
 iron = "*"
 router = "*"
-staticfile = "0.2.0"
 iron-login = "*"
 mount = "*"
-
+url = "0.5"
 getopts = "*"
 frank_jwt = "*"
 urlencoded = "*"
 nom = "*"
 
+# [dependencies.staticfile]
+# version = "0.2.0"
+# features = ["cache"]

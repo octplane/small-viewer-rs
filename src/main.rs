@@ -2,7 +2,6 @@
 
 extern crate rustc_serialize;
 extern crate iron;
-extern crate staticfile;
 extern crate mount;
 extern crate router;
 extern crate getopts;

@@ -2,19 +2,17 @@
 
 extern crate rustc_serialize;
 extern crate iron;
-extern crate staticfile;
 extern crate mount;
 extern crate router;
 extern crate getopts;
 extern crate urlencoded;
 extern crate iron_login;
 extern crate frank_jwt;
-
+extern crate time;
+extern crate url;
 
 #[macro_use]
 extern crate nom;
-
-
 
 
 pub mod daemon;
