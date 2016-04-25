@@ -1,27 +1,14 @@
-#![allow(dead_code)]
-
-extern crate rustc_serialize;
-extern crate iron;
-extern crate mount;
-extern crate router;
+extern crate small_viewer;
 extern crate getopts;
-extern crate urlencoded;
-extern crate iron_login;
-
-#[macro_use]
-extern crate nom;
-
-extern crate frank_jwt;
-
-mod data_format;
-mod daemon;
-mod api;
-mod config_reader;
 
 use std::env;
 use getopts::Options;
 use std::io::prelude::*;
 use std::fs::File;
+
+use small_viewer::config_reader;
+use small_viewer::daemon;
+
 
 
 extern crate time;
